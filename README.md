@@ -12,6 +12,10 @@
 2. Run command in another terminal `npm run start`
 3. Preview web page in browser '/'
 
+<br>
+
+<b><span style="color:red">Don't do the next step for assignments, you only need to deploy for Project 2</span></b>
+
 ## Deploy to Heroku
 1. Create a Heroku app: `heroku create --buildpack heroku/python`
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
