@@ -8,8 +8,8 @@
 1. Run `echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" > .env.development.local` in the project directory
 
 ## Run Application
-1. Run command in terminal `python app.py`
-2. Run command in another terminal `npm run start`
+1. Run command in terminal (in your project directory): `python app.py`
+2. Run command in another terminal, `cd` into the project directory, and run `npm run start`
 3. Preview web page in browser '/'
 
 ## Deploy to Heroku
