@@ -1,4 +1,4 @@
-# Flask and create-react-app
+# Oscar Ojeda Flask and create-react-app
 
 ## Requirements
 1. `npm install`
