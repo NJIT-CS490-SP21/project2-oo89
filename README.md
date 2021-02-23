@@ -1,4 +1,4 @@
-# Oscar Ojeda Flask and create-react-app
+# Oscar Ojeda Project 2 
 
 ## Requirements
 1. `npm install`
