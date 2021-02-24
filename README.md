@@ -19,21 +19,19 @@ Heroku link: https://o2tictactoe.herokuapp.com/
 ## Setup
 1. Run `echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" > .env.development.local` in the project directory
 2. Make sure to clone the milestone1 branch for project2 first part. 
-3. 
+3. Push milestone1 branch to heroku
+4. Have heroku automatically updated from milestone1 brach from GitHub 
 
 ## Run Application
 1. Run command in terminal (in your project directory): `python app.py`
 2. Run command in another terminal, `cd` into the project directory, and run `npm run start`
 3. Preview web page in browser '/'
 
-
-
-
 ## Deploy to Heroku
-*Don't do the Heroku step for assignments, you only need to deploy for Project 2*
+*Project 2*
 1. Create a Heroku app: `heroku create --buildpack heroku/python`
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
-3. Push to Heroku: `git push heroku main`
+3. Push to Heroku: `git push heroku milestone1`
 
 
 ## Technical issues
