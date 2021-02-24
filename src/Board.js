@@ -10,6 +10,8 @@ const Board = ({ squares, onClick })  =>{
     console.log("component Board did mount");
   },[]);
   
+  
+  
   return(
   
   <div className="board">
