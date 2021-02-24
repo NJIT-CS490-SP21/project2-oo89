@@ -1,4 +1,10 @@
-# Oscar Ojeda Project 2 
+# project2-oo89 Oscar Ojeda  
+
+CS490 
+
+O2TicTacToe
+
+Heroku link: https://o2tictactoe.herokuapp.com/
 
 ## Requirements
 1. `npm install`

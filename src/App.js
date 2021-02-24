@@ -13,12 +13,11 @@ const App = () => {
   const xO = xIsNext ? "X" : "O";
 
   const handleClick = (i) => {
+    
+    
     const historyPoint = history.slice(0, stepNumber + 1);
     const current = historyPoint[stepNumber];
     const squares = [...current];
-    
-    
-    
     
     // return if won or occupied
     if (winner || squares[i]) {
@@ -30,13 +29,18 @@ const App = () => {
     setStepNumber(historyPoint.length);
     setXisNext(!xIsNext);
     
-    socket.emit('eventData',squares);
+    //socket.emit('eventData',{squares: squares});
+    socket.emit('eventData',{squares:squares});
+    
+    //socket.emit('eventData2', setXisNext)
+    console.log(current);
     console.log(squares);
   };
   
   const jumpTo = (step) => {
     setStepNumber(step);
     setXisNext(step % 2 === 0);
+    
   };
 
   useEffect(() => {
@@ -47,9 +51,8 @@ const App = () => {
         console.log(data);
       // If the server sends a message (on behalf of another client), then we
       // add it to the list of messages to render it on the UI.
-      //  setHistory(current => [...history, data]);
-      setHistory(current => [...current, data]);
-      
+      //  setHistory(current => [...current, data.squares]);
+      setHistory(current => [...current, data.squares]);
       
     });
   }, []);
@@ -76,6 +79,7 @@ const App = () => {
         <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
       </div>
     </>
+    
   );
 };
 
