@@ -16,5 +16,8 @@ export function calculateWinner(squares) {
       return squares[a];
     }
   }
+  if (squares.includes(null) === false) {
+		return 'Game Tied'
+	}
   return null;
 }
