@@ -11,8 +11,46 @@ const App = () => {
   const [xIsNext, setXisNext] = useState(true);
   const winner = calculateWinner(history[stepNumber]);
   const xO = xIsNext ? "X" : "O";
+  
+  //User 
+  const [activeUsers, setUsers] = useState([]);
+  const [username, setusername] = useState(null);  
+  const usernameRef = useRef(null); // This is the reference to the input element  username 
+  const [xOLogin, setxOLogin] = useState('X'); 
+  // hiding the board 
+  const [isShown, setShown] = useState(false); 
+  
+  function loginClick () {
+     const userText = usernameRef.current.value; 
+     setUsers(prevUsers => {
+       const listUserCopy = [...prevUsers]; 
+       listUserCopy.push(userText); 
+       
+       return listUserCopy; 
+     });
+     
+    //this is to show ot not the board when login  
+    setShown((prevShown) => {
+      return !prevShown;
+    });
+    
+    
+   socket.emit('login', {userText:userText,xOLogin:xOLogin }); 
+   
 
-  const handleClick = (i) => {
+  }
+  
+  useEffect(() => {
+      socket.on('login', (data) => {
+      console.log('Login event received!');
+      console.log(data);
+      setUsers(prevUser => [...prevUser, data.userText]);
+      setxOLogin('O');
+    });
+      
+    }, []);
+  
+  const sqClick = (i) => {
     
     
     const historyPoint = history.slice(0, stepNumber + 1);
@@ -31,6 +69,7 @@ const App = () => {
     
     //socket.emit('eventData',{squares: squares});
     socket.emit('eventData',{squares:squares});
+    
     
     //socket.emit('eventData2', setXisNext)
     console.log(current);
@@ -55,6 +94,7 @@ const App = () => {
       setHistory(current => [...current, data.squares]);
       
     });
+    
   }, []);
 
   const renderMoves = () =>
@@ -70,7 +110,26 @@ const App = () => {
   return (
     <>
       <h1>Tic Tac Toe - Oscar Project2 CS490</h1>
-      <Board squares={history[stepNumber]} onClick={handleClick} />
+      <div>
+      
+      {isShown === false ? (
+        <div>
+      <input ref={usernameRef} type="text" /> 
+        <button onClick={() => loginClick()}> Login </button>
+       
+      </div>
+      ):null}
+      
+         <div>
+        {activeUsers.map((item, index) => (
+          <li>{item} {index===0 ? "X" : index===1 ? "O" : "spectator"} </li> //if index ==0 print x else if index==1 print o else spec
+        ))}
+       </div>
+       
+       {isShown === true ? ( 
+           <div>
+      <Board squares={history[stepNumber]} onClick={sqClick} />
+      
       <div className="info-wrapper">
         <div>
           <h3>History</h3>
@@ -78,6 +137,11 @@ const App = () => {
         </div>
         <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
       </div>
+      </div>
+         ): null }
+      </div>
+      
+    
     </>
     
   );

@@ -13,6 +13,7 @@ socketio = SocketIO(
     json=json,
     manage_session=False
 )
+current_active_users = []
 
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
@@ -38,12 +39,12 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
     # the client that emmitted the event that triggered this function
     socketio.emit('eventData',  data, broadcast=True, include_self=False)
 
-@socketio.on('eventData2')
+@socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
     print(str(data))
     # This emits the 'eventData' event from the server to all clients except for
     # the client that emmitted the event that triggered this function
-    socketio.emit('eventData2',  data, broadcast=True, include_self=False)    
+    socketio.emit('login',  data, broadcast=True, include_self=False)    
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
