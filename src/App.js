@@ -16,7 +16,7 @@ const App = () => {
   const [activeUsers, setUsers] = useState([]);
   const [username, setusername] = useState(null);  
   const usernameRef = useRef(null); // This is the reference to the input element  username 
-  const [xOLogin, setxOLogin] = useState('X'); 
+  //const [xOLogin, setxOLogin] = useState('X'); 
   // hiding the board 
   const [isShown, setShown] = useState(false); 
   
@@ -35,21 +35,22 @@ const App = () => {
     });
     
     
-   socket.emit('login', {userText:userText,xOLogin:xOLogin }); 
+   socket.emit('login', {userText:userText}); 
    
 
   }
-  
+  //useEffect for login information 
   useEffect(() => {
       socket.on('login', (data) => {
       console.log('Login event received!');
       console.log(data);
       setUsers(prevUser => [...prevUser, data.userText]);
-      setxOLogin('O');
+      
     });
       
     }, []);
   
+  //This is the onclick function on each square 
   const sqClick = (i) => {
     
     
@@ -68,12 +69,13 @@ const App = () => {
     setXisNext(!xIsNext);
     
     //socket.emit('eventData',{squares: squares});
-    socket.emit('eventData',{squares:squares});
+    socket.emit('eventData',{squares:squares, i:i, history:history, stepNumber:stepNumber, xIsNext:xIsNext, xO:xO });
     
     
     //socket.emit('eventData2', setXisNext)
-    console.log(current);
+    console.log(i);
     console.log(squares);
+    console.log(history);
   };
   
   const jumpTo = (step) => {
@@ -81,7 +83,7 @@ const App = () => {
     setXisNext(step % 2 === 0);
     
   };
-
+//For board 
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
@@ -90,12 +92,29 @@ const App = () => {
         console.log(data);
       // If the server sends a message (on behalf of another client), then we
       // add it to the list of messages to render it on the UI.
+      const historyPointCopy = (data.history).slice(0, data.stepNumber + 1);
+      const currentCopy = historyPointCopy[data.stepNumber];
+      const squaresCopy = [...currentCopy];
+      
+      
+      if (winner || squaresCopy[data.i]) 
+      {
+        return;
+      } 
+      squaresCopy[data.i] = data.xO;
+      setHistory([...historyPointCopy, squaresCopy]);
+      setStepNumber(historyPointCopy.length);
+      setXisNext(!(data.xIsNext));
+      console.log(history);
+      console.log(historyPointCopy);
       //  setHistory(current => [...current, data.squares]);
-      setHistory(current => [...current, data.squares]);
+      //setHistory(current => [...current, data.squares]);
       
     });
     
   }, []);
+
+
 
   const renderMoves = () =>
     history.map((_step, move) => {
@@ -106,7 +125,13 @@ const App = () => {
         </li>
       );
     });
-
+  
+  //check  
+  function checkSpectator(){
+    return;
+  }
+  
+  
   return (
     <>
       <h1>Tic Tac Toe - Oscar Project2 CS490</h1>
