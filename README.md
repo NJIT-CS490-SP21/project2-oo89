@@ -31,8 +31,10 @@ Heroku link: https://o2tictactoe.herokuapp.com/
 *Project 2*
 1. Create a Heroku app: `heroku create --buildpack heroku/python`
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
+3. Important to have the Procfile with `web: python app.py` or the name of your main app. 
 3. Push to Heroku: `git push heroku milestone1`
-
+4. Also you can have heroku configure to automatically update from your GitHub milestone1 branch. 
+So each time you push something to GitHub your project with automatically deploy to heroku. 
 
 ## Technical issues
 1. The first technical issue that I had was with Cloud9 virtual disk runing out of space.
@@ -41,7 +43,8 @@ services -> EC2. Then under resources click Volumes, right click the column size
 that says 10GiB, then click modify volume. I put there 20GiB, then click modify and confirm. 
 2. The app on Heroku at the first time didn't work, it was because the requirements.
 To solve this I added everything heroku need in the requirements document in order to run. 
-3. 
+3. It is super annoying each time cloud9 automatically close your work and make you login 
+agian. If you have to work for long hours, as I did, this will affects a lot. 
 
 ## Problems
 1. The first problem that clearly I had for this project was the time. 
@@ -51,4 +54,8 @@ was really hard for me to get the clients updated. If I had had more time I woul
 have studied the subject more and that could have helped me with this project. 
 Also I think the demos and examples for this project they were very simple nothing
 to do with the actual project.
-2. 
+2. I had a big problem trying to update all the clients. At first I was using the same 
+history and I was not making copies, after long hours studying it I realized that 
+I not only had to copy the history but everything that I need to use. 
+It was also important to emit from the onclick of the square all the variables that were 
+going to be needed later in the useEffect. After all that, the game updates correctly on the tabs.

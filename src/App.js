@@ -19,7 +19,7 @@ const App = () => {
   //const [xOLogin, setxOLogin] = useState('X'); 
   // hiding the board 
   const [isShown, setShown] = useState(false); 
-  
+  // Function onclick for login information 
   function loginClick () {
      const userText = usernameRef.current.value; 
      setUsers(prevUsers => {
@@ -68,11 +68,10 @@ const App = () => {
     setStepNumber(historyPoint.length);
     setXisNext(!xIsNext);
     
-    //socket.emit('eventData',{squares: squares});
+    //Emit what I need to the sever. 
     socket.emit('eventData',{squares:squares, i:i, history:history, stepNumber:stepNumber, xIsNext:xIsNext, xO:xO });
     
-    
-    //socket.emit('eventData2', setXisNext)
+    //some console log to see what I needed. 
     console.log(i);
     console.log(squares);
     console.log(history);
@@ -83,6 +82,7 @@ const App = () => {
     setXisNext(step % 2 === 0);
     
   };
+  
 //For board 
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
