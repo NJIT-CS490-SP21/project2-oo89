@@ -43,9 +43,9 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
 
 @socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
-    current_active_users.append(data['userText'])
+    #current_active_users.append(data['userText'])
     print(str(data))
-    print(current_active_users)
+    #print(current_active_users)
     # This emits the 'eventData' event from the server to all clients except for
     # the client that emmitted the event that triggered this function
     socketio.emit('login',  data, broadcast=True, include_self=False)    
