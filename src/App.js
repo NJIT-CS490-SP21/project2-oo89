@@ -20,10 +20,11 @@ const App = () => {
   //const [xOLogin, setxOLogin] = useState('X'); 
   // hiding the board 
   const [isShown, setShown] = useState(false); 
-  
+  // Hiding the leaderboard 
+  const [isShownLB, setShownLB] = useState(false); 
   //DB users 
   const [dbUserList, setdbUserList] = useState({});
-  const [dbScoreList, setdbScoreList] = useState([]);
+  //const [dbScoreList, setdbScoreList] = useState([]);
   
   // Function onclick for login information 
   function loginClick () {
@@ -51,7 +52,7 @@ const App = () => {
       setUsers(prevUser => [...prevUser, data.userText]);
       
     });
-    
+      //I have to emit all the change o the db to here
       socket.on('user_dic', (data)=> {
       console.log('User Dic event received!');
       console.log(data);
@@ -73,6 +74,7 @@ const App = () => {
     
     // return if won or occupied
     if (winner || squares[i]) {
+      console.log("Winner" + winner);
       return;
     } 
     // select square
@@ -88,13 +90,26 @@ const App = () => {
     console.log(i);
     console.log(squares);
     console.log(history);
-  };
-  
-  const jumpTo = (step) => {
-    setStepNumber(step);
-    setXisNext(step % 2 === 0);
     
   };
+  
+  
+  //to send the winer in order to update the score 
+  if (winner){
+    var winnerName = "";
+    console.log("Winner--" + winner);
+    if(winner === "X"){
+        winnerName = activeUsers[0];
+        socket.emit('winnerN', {'winner':winnerName});
+    }
+    else if(winner === "O"){
+        winnerName = activeUsers[1];
+        socket.emit('winnerN', {'winner':winnerName});
+    }
+  }
+    
+
+  
   
 //For board 
   useEffect(() => {
@@ -127,7 +142,18 @@ const App = () => {
     
   }, []);
 
-
+//onClick to hide or show leaderboard 
+  function leaderboardSHClick () {
+    setShownLB((prevShownLB) => {
+      return !prevShownLB;
+    }); 
+  }
+  
+  const jumpTo = (step) => {
+    setStepNumber(step);
+    setXisNext(step % 2 === 0);
+    
+  };
 
   const renderMoves = () =>
     history.map((_step, move) => {
@@ -140,7 +166,7 @@ const App = () => {
     });
   
   //check  
-  function checkSpectator(){
+  function checkNameWiner(){
     return;
   }
   
@@ -167,25 +193,33 @@ const App = () => {
        {isShown === true ? ( 
            <div>
       <Board squares={history[stepNumber]} onClick={sqClick} />
+      
       <div className="info-wrapper">
         <div>
-          <h3>History</h3>
+          <button onClick={() => leaderboardSHClick()}> show/Hide Leaderboard</button>
+          <button>{winner ? "Winner: " + winner : "Next Player: " + xO}</button>
+          <h3>Steps in history</h3>
           {renderMoves()}
         </div>
-        <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
       </div>
       
+      {isShownLB === true ? (
+      
         <div className="score-board">
-            <h2>Leaderboard</h2>
-              {Object.entries(dbUserList)
-              .map(([k, val]) =>
-                    <tr key={k}>
-                    <td>{k} </td>
-                    <td>{val}</td>
-                  </tr>
-            )}
-          
-        </div>
+              <h2>Leaderboard</h2>
+                {Object.entries(dbUserList)
+                .map(([k, val]) =>
+                      <tr key={k}>
+                      <td>{k} </td>
+                      <td>{val}</td>
+                    </tr>
+              )}
+            
+          </div>
+      
+      ):null}
+      
+        
       </div>
          ): null }
       </div>

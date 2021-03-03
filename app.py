@@ -107,7 +107,23 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         #print(scoreList)
         socketio.emit('login', data, broadcast=True, include_self=False)
         socketio.emit('user_dic', {'users':users })
+
+#update winner in db and then emit it to all the clients     
+@socketio.on('winnerN')
+def on_winner(data): # data is whatever arg you pass in your emit call on client
+    print(data['winner'])
+    winnerName = data['winner']
+    dbWinner = models.Person.query.get(winnerName)
     
+    dbWinner.score +=1 
+    db.session.commit()
+    print(dbWinner.username, dbWinner.score)
+    allUsers = models.Person.query.all()
+    users= {}
+    for person in allUsers:
+            users[person.username] = person.score
+    socketio.emit('user_dic', {'users':users })
+    #socketio.emit('winnerN',  data, broadcast=True, include_self=False)
 
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
