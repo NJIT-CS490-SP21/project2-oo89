@@ -5,7 +5,6 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 
-
 load_dotenv(find_dotenv()) # This is to load your env variables from .env
 
 app = Flask(__name__, static_folder='./build/static')
@@ -18,7 +17,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
-
 import models
 db.create_all()
 
@@ -30,6 +28,8 @@ socketio = SocketIO(
     json=json,
     manage_session=False
 )
+current_active_users = []
+
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 def index(filename):
@@ -39,16 +39,6 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
-    allUsers = models.Person.query.all()
-    #users = {}
-    users = []
-    scoreList = []
-    for person in allUsers:
-        users.append(person.username)
-        scoreList.append(person.score)
-    print(users)
-    print(scoreList)
-    socketio.emit('user_dic', {'users': users,'scoreList': scoreList})
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -66,53 +56,19 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
     # the client that emmitted the event that triggered this function
     socketio.emit('eventData',  data, broadcast=True, include_self=False)
 
-
+users = []
 @socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
-    #users.append(data['userText'])
-    print(data)
-    try:
-        #Addding the user to the db when login with score=100 
-        newUser = models.Person(username=data['userText'], score=100)
-        print(data['userText'])
-        db.session.add(newUser)
-        db.session.commit()
-        allUsers = models.Person.query.all()
-        #users= {}
-        user = []
-        scoreList = []
-        print(allUsers)
-        for person in allUsers:
-            users.append(person.username)
-            scoreList.append(person.score)
-        #Then we need to emit what we want and in this case for now emit username and score
-        print(users)
-        print(scoreList)
-        socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users, 'scoreList': scoreList})
-    except:     
-        print("Aqui")
-        allUsers = models.Person.query.all()
-        #users= {}
-        users = []
-        scoreList = []
-        print(allUsers)
-        for person in allUsers: 
-             #users[person.username] = person.score
-             users.append(person.username)
-             scoreList.append(person.score)
-        print(users) 
-        print(scoreList)
-        socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users, 'scoreList': scoreList})
-    
+    users.append(data['userText'])
+    print()
+    #print(current_active_users)
+    # This emits the 'eventData' event from the server to all clients except for
+    # the client that emmitted the event that triggered this function
+    socketio.emit('login',  data, broadcast=True, include_self=False)    
 
-# Note we need to add this line so we can import app in the python shell
-if __name__ == "__main__":
-    
 # Note that we don't call app.run anymore. We call socketio.run with app arg
-    socketio.run(
-        app,
-        host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-    )
+socketio.run(
+    app,
+    host=os.getenv('IP', '0.0.0.0'),
+    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+)

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { calculateWinner } from "./helper";
 import Board from "./Board";
 import io from 'socket.io-client';
+import { ListItem } from './ListItem.js';
 
 const socket = io(); // Connects to socket connection
 
@@ -19,6 +20,11 @@ const App = () => {
   //const [xOLogin, setxOLogin] = useState('X'); 
   // hiding the board 
   const [isShown, setShown] = useState(false); 
+  
+  //DB users 
+  const [dbUserList, setdbUserList] = useState([]);
+  const [dbScoreList, setdbScoreList] = useState([]);
+  
   // Function onclick for login information 
   function loginClick () {
      const userText = usernameRef.current.value; 
@@ -33,11 +39,9 @@ const App = () => {
     setShown((prevShown) => {
       return !prevShown;
     });
-    
-    
+  
    socket.emit('login', {userText:userText}); 
    
-
   }
   //useEffect for login information 
   useEffect(() => {
@@ -47,6 +51,15 @@ const App = () => {
       setUsers(prevUser => [...prevUser, data.userText]);
       
     });
+    
+      socket.on('user_dic', (data)=> {
+      console.log('User Dic event received!');
+      console.log(data);
+      
+      setdbUserList(data.users)
+      setdbScoreList(data.scoreList)
+    
+      });
       
     }, []);
   
@@ -154,7 +167,6 @@ const App = () => {
        {isShown === true ? ( 
            <div>
       <Board squares={history[stepNumber]} onClick={sqClick} />
-      
       <div className="info-wrapper">
         <div>
           <h3>History</h3>
@@ -162,6 +174,20 @@ const App = () => {
         </div>
         <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
       </div>
+      
+        <div className="score-board">
+        
+          <div className="score-board-child1">
+            <h2>Users</h2>
+            {dbUserList.map((user, index) => <ListItem key={index} name={user} />)}
+          </div>
+          
+          <div className="score-board-child2">
+            <h2>Scores</h2>
+            {dbScoreList.map((score, index) => <ListItem key={index} name={score} />)}
+          </div>
+          
+        </div>
       </div>
          ): null }
       </div>
