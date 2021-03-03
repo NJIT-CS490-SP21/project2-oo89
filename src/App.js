@@ -176,17 +176,14 @@ const App = () => {
       </div>
       
         <div className="score-board">
-      
-          
             <h2>Leaderboard</h2>
               {Object.entries(dbUserList)
               .map(([k, val]) =>
                     <tr key={k}>
                     <td>{k} </td>
-                    <td>- {val}</td>
+                    <td>{val}</td>
                   </tr>
             )}
-          
           
         </div>
       </div>

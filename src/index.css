@@ -72,3 +72,13 @@ li {
   padding: 0.5rem;
   margin: 0.5rem 1rem;
 }
+.score-board {
+  position:absolute;
+  top: 145px;
+  right:340px;
+  margin: 0.5rem 1rem;
+  display: table;
+  color: black;
+  border: none;
+  outline: none;
+}
