@@ -72,26 +72,3 @@ li {
   padding: 0.5rem;
   margin: 0.5rem 1rem;
 }
-.score-board {
-    position: relative;
-    border: 6px solid #fff;
-    padding: 20px;
-    left: 520px;
-    margin-top: -120%;
-}
-.score-board-child1{
-    position: relative;
-    width: 10%;
-    left: -20px;
-    margin-top: -5%;
-    padding: 20px;
-    border: 2px solid red;
-}
-.score-board-child2{
-    position: relative;
-    width: 10%;
-    left: 67px;
-    margin-top: -61.7%;
-    padding: 20px;
-    border: 2px solid red;
-}

@@ -22,7 +22,7 @@ const App = () => {
   const [isShown, setShown] = useState(false); 
   
   //DB users 
-  const [dbUserList, setdbUserList] = useState([]);
+  const [dbUserList, setdbUserList] = useState({});
   const [dbScoreList, setdbScoreList] = useState([]);
   
   // Function onclick for login information 
@@ -57,7 +57,7 @@ const App = () => {
       console.log(data);
       
       setdbUserList(data.users)
-      setdbScoreList(data.scoreList)
+      //setdbScoreList(data.scoreList)
     
       });
       
@@ -176,16 +176,17 @@ const App = () => {
       </div>
       
         <div className="score-board">
-        
-          <div className="score-board-child1">
-            <h2>Users</h2>
-            {dbUserList.map((user, index) => <ListItem key={index} name={user} />)}
-          </div>
+      
           
-          <div className="score-board-child2">
-            <h2>Scores</h2>
-            {dbScoreList.map((score, index) => <ListItem key={index} name={score} />)}
-          </div>
+            <h2>Leaderboard</h2>
+              {Object.entries(dbUserList)
+              .map(([k, val]) =>
+                    <tr key={k}>
+                    <td>{k} </td>
+                    <td>- {val}</td>
+                  </tr>
+            )}
+          
           
         </div>
       </div>

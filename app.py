@@ -40,15 +40,16 @@ def index(filename):
 def on_connect():
     print('User connected!')
     allUsers = models.Person.query.all()
-    #users = {}
-    users = []
-    scoreList = []
+    users = {}
+    #users = []
+    #scoreList = []
     for person in allUsers:
-        users.append(person.username)
-        scoreList.append(person.score)
+        users[person.username] = person.score
+        #users.append(person.username)
+        #scoreList.append(person.score)
     print(users)
-    print(scoreList)
-    socketio.emit('user_dic', {'users': users,'scoreList': scoreList})
+    #print(scoreList)
+    socketio.emit('user_dic', {'users': users})
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -78,33 +79,34 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         db.session.add(newUser)
         db.session.commit()
         allUsers = models.Person.query.all()
-        #users= {}
-        user = []
-        scoreList = []
+        users= {}
+        #users = []
+        #scoreList = []
         print(allUsers)
         for person in allUsers:
-            users.append(person.username)
-            scoreList.append(person.score)
+            users[person.username] = person.score
+            #users.append(person.username)
+            #scoreList.append(person.score)
         #Then we need to emit what we want and in this case for now emit username and score
         print(users)
-        print(scoreList)
+        #print(scoreList)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users, 'scoreList': scoreList})
+        socketio.emit('user_dic', {'users': users})
     except:     
         print("Aqui")
         allUsers = models.Person.query.all()
-        #users= {}
-        users = []
-        scoreList = []
+        users= {}
+       # users = []
+        #scoreList = []
         print(allUsers)
         for person in allUsers: 
-             #users[person.username] = person.score
-             users.append(person.username)
-             scoreList.append(person.score)
+             users[person.username] = person.score
+             #users.append(person.username)
+             #scoreList.append(person.score)
         print(users) 
-        print(scoreList)
+        #print(scoreList)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users, 'scoreList': scoreList})
+        socketio.emit('user_dic', {'users':users })
     
 
 # Note we need to add this line so we can import app in the python shell
