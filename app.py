@@ -71,8 +71,12 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
 @socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
     #users.append(data['userText'])
-    print(data)
-    try:
+    print("USer Login"+ str(data))
+    
+
+    x = models.Person.query.filter_by(username=data['userText']).first()
+    print(x)    
+    if x is None:
         #Addding the user to the db when login with score=100 
         newUser = models.Person(username=data['userText'], score=100)
         print(data['userText'])
@@ -80,8 +84,6 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         db.session.commit()
         allUsers = models.Person.query.all()
         users= {}
-        #users = []
-        #scoreList = []
         print(allUsers)
         for person in allUsers:
             users[person.username] = person.score
@@ -91,37 +93,43 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         print(users)
         #print(scoreList)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users})
-    except:     
-        print("Aqui")
+        socketio.emit('user_dic', {'users': users}, broadcast=True, include_self=False)
+        
+    else:    
+        print("Aqui--------------------")
         allUsers = models.Person.query.all()
         users= {}
-       # users = []
-        #scoreList = []
         print(allUsers)
+        
         for person in allUsers: 
              users[person.username] = person.score
              #users.append(person.username)
              #scoreList.append(person.score)
-        print(users) 
-        #print(scoreList)
+        print(users)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users':users })
+        socketio.emit('user_dic', {'users': users}, broadcast=True, include_self=False)
+    
 
+    
 #update winner in db and then emit it to all the clients     
 @socketio.on('winnerN')
 def on_winner(data): # data is whatever arg you pass in your emit call on client
     print(data['winner'])
     winnerName = data['winner']
     dbWinner = models.Person.query.get(winnerName)
-    
-    dbWinner.score +=1 
+    #check this problem score not updating on db 
+    dbWinner.score= dbWinner.score + 1 
+    db.session.merge(dbWinner)
+    #db.session.add(dbWinner.score)
     db.session.commit()
+    #db.session.flush()
+    print("At Winner position" )
     print(dbWinner.username, dbWinner.score)
     allUsers = models.Person.query.all()
     users= {}
     for person in allUsers:
             users[person.username] = person.score
+    print(users)
     socketio.emit('user_dic', {'users':users })
     #socketio.emit('winnerN',  data, broadcast=True, include_self=False)
 

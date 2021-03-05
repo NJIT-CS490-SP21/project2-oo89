@@ -52,7 +52,11 @@ const App = () => {
       setUsers(prevUser => [...prevUser, data.userText]);
       
     });
-      //I have to emit all the change o the db to here
+
+    }, []);
+    
+    useEffect(() => {
+     //I have to emit all the change o the db to here
       socket.on('user_dic', (data)=> {
       console.log('User Dic event received!');
       console.log(data);
@@ -63,7 +67,6 @@ const App = () => {
       });
       
     }, []);
-  
   //This is the onclick function on each square 
   const sqClick = (i) => {
     
@@ -93,7 +96,6 @@ const App = () => {
     
   };
   
-  
   //to send the winer in order to update the score 
   if (winner){
     var winnerName = "";
@@ -108,8 +110,6 @@ const App = () => {
     }
   }
     
-
-  
   
 //For board 
   useEffect(() => {
