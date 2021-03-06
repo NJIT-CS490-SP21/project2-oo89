@@ -151,8 +151,8 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     dbWinner = db.session.query(models.Person).get(winnerName)
     dbLoser = db.session.query(models.Person).get(loserName)
     #check this problem score not updating on db 
-    dbWinner.score= dbWinner.score + 0.5 
-    dbLoser.score= dbLoser.score - 0.5 
+    dbWinner.score= dbWinner.score + 1 
+    dbLoser.score= dbLoser.score - 1 
     db.session.commit()
     #db.session.flush()
     print("At Winner position" )
