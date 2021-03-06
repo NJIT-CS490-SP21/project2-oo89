@@ -80,6 +80,7 @@ const App = () => {
       console.log("Winner" + winner);
       return;
     } 
+ 
     // select square
     squares[i] = xO;
     setHistory([...historyPoint, squares]);
@@ -95,22 +96,6 @@ const App = () => {
     console.log(history);
     
   };
-  
-  //to send the winer in order to update the score 
-  if (winner){
-    var winnerName = "";
-    console.log("Winner--" + winner);
-    if(winner === "X"){
-        winnerName = activeUsers[0];
-        socket.emit('winnerN', {'winner':winnerName});
-    }
-    else if(winner === "O"){
-        winnerName = activeUsers[1];
-        socket.emit('winnerN', {'winner':winnerName});
-    }
-  }
-    
-  
 //For board 
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
@@ -152,25 +137,49 @@ const App = () => {
   const jumpTo = (step) => {
     setStepNumber(step);
     setXisNext(step % 2 === 0);
-    
+          //to send the winer in order to update the score 
+    if (winner){
+      var winnerName = "";
+      console.log("Winner--" + winner);
+      if(winner === "X"){
+          winnerName = activeUsers[0];
+          socket.emit('winnerN', {'winner':winnerName});
+      }
+      else if(winner === "O"){
+          winnerName = activeUsers[1];
+          socket.emit('winnerN', {'winner':winnerName});
+      }
+    }
   };
-
+  
+  useEffect(() => {
+      var winnerName = "";
+      var loserName = "";
+      console.log("Winner--" + winner);
+      if(winner === "X"){
+          winnerName = activeUsers[0];
+          loserName = activeUsers[1];
+          socket.emit('winnerN', {'winner':winnerName, 'loser': loserName});
+      }
+      else if(winner === "O"){
+          winnerName = activeUsers[1];
+          loserName = activeUsers[0];
+          socket.emit('winnerN', {'winner':winnerName, 'loser': loserName});
+      }
+    
+    }, [winner]);
+    
+  // Renders Move  
   const renderMoves = () =>
     history.map((_step, move) => {
-      const destination = move ? `Go to move #${move}` : "Start";
+      const destination = move ? `Go to move #${move}` : "Restart";
       return (
         <li key={move}>
           <button onClick={() => jumpTo(move)}>{destination}</button>
         </li>
       );
     });
-  
-  //check  
-  function checkNameWiner(){
-    return;
-  }
-  
-  
+
   return (
     <>
       <h1>Tic Tac Toe - Oscar Project2 CS490</h1>
@@ -197,6 +206,7 @@ const App = () => {
       <div className="info-wrapper">
         <div>
           <button onClick={() => leaderboardSHClick()}> show/Hide Leaderboard</button>
+          <button>Enjoy the Game</button>
           <button>{winner ? "Winner: " + winner : "Next Player: " + xO}</button>
           <h3>Steps in history</h3>
           {renderMoves()}
