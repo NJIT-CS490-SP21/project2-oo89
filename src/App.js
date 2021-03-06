@@ -22,9 +22,11 @@ const App = () => {
   const [isShown, setShown] = useState(false); 
   // Hiding the leaderboard 
   const [isShownLB, setShownLB] = useState(false); 
-  //DB users 
-  const [dbUserList, setdbUserList] = useState({});
-  //const [dbScoreList, setdbScoreList] = useState([]);
+  
+  //DB users and scores 
+  const [dbUserList, setdbUserList] = useState([]);
+  const [dbScoreList, setdbScoreList] = useState([]);
+  
   
   // Function onclick for login information 
   function loginClick () {
@@ -62,8 +64,7 @@ const App = () => {
       console.log(data);
       
       setdbUserList(data.users)
-      //setdbScoreList(data.scoreList)
-    
+      setdbScoreList(data.scores)
       });
       
     }, []);
@@ -137,34 +138,43 @@ const App = () => {
   const jumpTo = (step) => {
     setStepNumber(step);
     setXisNext(step % 2 === 0);
-          //to send the winer in order to update the score 
-    if (winner){
-      var winnerName = "";
-      console.log("Winner--" + winner);
-      if(winner === "X"){
-          winnerName = activeUsers[0];
-          socket.emit('winnerN', {'winner':winnerName});
-      }
-      else if(winner === "O"){
-          winnerName = activeUsers[1];
-          socket.emit('winnerN', {'winner':winnerName});
-      }
-    }
   };
   
   useEffect(() => {
       var winnerName = "";
       var loserName = "";
       console.log("Winner--" + winner);
-      if(winner === "X"){
+      if(winner === "X")
+      {
           winnerName = activeUsers[0];
-          loserName = activeUsers[1];
-          socket.emit('winnerN', {'winner':winnerName, 'loser': loserName});
+          if(activeUsers.length>1)
+          {
+            console.log("The Winner I want "+ winnerName)
+            loserName = activeUsers[1];
+            console.log("The loser I want "+loserName)
+            socket.emit('winnerN', {'winner':winnerName, 'loser':loserName});
+          }
+          else
+          {
+            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restar\nMake sure you click 'ok' in all of the windows you have open\n");
+          }
+          
       }
-      else if(winner === "O"){
-          winnerName = activeUsers[1];
-          loserName = activeUsers[0];
-          socket.emit('winnerN', {'winner':winnerName, 'loser': loserName});
+      else if(winner === "O")
+      {
+          
+          if(activeUsers.length>1)
+          {
+            winnerName = activeUsers[1];
+            loserName = activeUsers[0];
+            socket.emit('winnerN', {'winner':winnerName, 'loser':loserName});
+          }
+          else
+          {
+            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restar\nMake sure you click 'ok' in all of the windows you have open\n");
+          }
+          
+
       }
     
     }, [winner]);
@@ -179,6 +189,20 @@ const App = () => {
         </li>
       );
     });
+    
+  const renderTable = dbUserList.map((value, index) => {
+    const linkContent = dbScoreList[index];
+    return (
+     
+      <tr>      
+        <td>{value}</td>
+        <td>{linkContent}</td>
+      </tr>
+
+    
+    );
+  });
+     
 
   return (
     <>
@@ -217,14 +241,9 @@ const App = () => {
       
         <div className="score-board">
               <h2>Leaderboard</h2>
-                {Object.entries(dbUserList)
-                .map(([k, val]) =>
-                      <tr key={k}>
-                      <td>{k} </td>
-                      <td>{val}</td>
-                    </tr>
-              )}
-            
+              
+                 {renderTable}
+              
           </div>
       
       ):null}

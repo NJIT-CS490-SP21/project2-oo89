@@ -4,6 +4,7 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
+from collections import OrderedDict
 
 
 
@@ -42,15 +43,23 @@ def on_connect():
     print('User connected!')
     allUsers = models.Person.query.all()
     users = {}
-    #users = []
-    #scoreList = []
+    usersList = []
+    scoreList = []
     for person in allUsers:
         users[person.username] = person.score
         #users.append(person.username)
         #scoreList.append(person.score)
+    print("no sorted")
     print(users)
-    #print(scoreList)
-    socketio.emit('user_dic', {'users': users})
+    usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+    print("sorted")
+    print(usersSorted)
+    for k, v in usersSorted.items():
+        usersList.append(k)
+        scoreList.append(v)
+    print(usersList)
+    print(scoreList)
+    socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -85,30 +94,47 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         db.session.commit()
         allUsers = models.Person.query.all()
         users= {}
+        usersList = []
+        scoreList = []
         print(allUsers)
         for person in allUsers:
             users[person.username] = person.score
             #users.append(person.username)
             #scoreList.append(person.score)
         #Then we need to emit what we want and in this case for now emit username and score
+        print("no sorted")
         print(users)
-        #print(scoreList)
+        usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+        print("sorted")
+        print(usersSorted)
+        for k, v in usersSorted.items():
+            usersList.append(k)
+            scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users}, broadcast=True, include_self=False)
+        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList}, broadcast=True, include_self=False)
         
     else:    
         print("Aqui--------------------")
         allUsers = models.Person.query.all()
         users= {}
+        usersList = []
+        scoreList = []
         print(allUsers)
         
         for person in allUsers: 
              users[person.username] = person.score
              #users.append(person.username)
              #scoreList.append(person.score)
+        print("no sorted")
         print(users)
+        usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+        print("sorted")
+        print(usersSorted)
+        for k, v in usersSorted.items():
+            usersList.append(k)
+            scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': users}, broadcast=True, include_self=False)
+        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList}, broadcast=True, include_self=False)
     
 
     
@@ -130,10 +156,19 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     print(dbWinner.username, dbWinner.score)
     allUsers = models.Person.query.all()
     users= {}
+    usersList = []
+    scoreList = []
     for person in allUsers:
             users[person.username] = person.score
+    print("no sorted")
     print(users)
-    socketio.emit('user_dic', {'users':users })
+    usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+    print("sorted")
+    print(usersSorted)
+    for k, v in usersSorted.items():
+        usersList.append(k)
+        scoreList.append(v)
+    socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
     #socketio.emit('winnerN',  data, broadcast=True, include_self=False)
 
 # Note we need to add this line so we can import app in the python shell
