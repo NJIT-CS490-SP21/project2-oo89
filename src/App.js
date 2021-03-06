@@ -135,10 +135,27 @@ const App = () => {
     }); 
   }
   
+  //jump to is used in the history and to restart the game 
   const jumpTo = (step) => {
+    
     setStepNumber(step);
     setXisNext(step % 2 === 0);
+    socket.emit('jump',{stepNumber:stepNumber,xIsNext:xIsNext, step:step});
   };
+  
+  useEffect(() => {
+     //I have to emit all the change o the db to here
+      socket.on('jump', (data)=> {
+      console.log('Jump received!');
+      console.log(data);
+      const setStepNumberCopy = data.step;
+      
+      setStepNumber(setStepNumberCopy);
+      setXisNext(data.step % 2 ===0);
+      });
+      
+    }, []);
+  
   
   useEffect(() => {
       var winnerName = "";

@@ -77,6 +77,9 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
     # the client that emmitted the event that triggered this function
     socketio.emit('eventData',  data, broadcast=True, include_self=False)
 
+@socketio.on('jump')
+def on_jump(data): 
+    socketio.emit('jump',  data)
 
 @socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
@@ -111,7 +114,7 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
             usersList.append(k)
             scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList}, broadcast=True, include_self=False)
+        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
         
     else:    
         print("Aqui--------------------")
@@ -134,7 +137,7 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
             usersList.append(k)
             scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
-        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList}, broadcast=True, include_self=False)
+        socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
     
 
     
@@ -148,8 +151,8 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     dbWinner = db.session.query(models.Person).get(winnerName)
     dbLoser = db.session.query(models.Person).get(loserName)
     #check this problem score not updating on db 
-    dbWinner.score= dbWinner.score + 1 
-    dbLoser.score= dbLoser.score - 1 
+    dbWinner.score= dbWinner.score + 0.5 
+    dbLoser.score= dbLoser.score - 0.5 
     db.session.commit()
     #db.session.flush()
     print("At Winner position" )
