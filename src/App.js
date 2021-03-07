@@ -7,17 +7,19 @@ import { ListItem } from './ListItem.js';
 const socket = io(); // Connects to socket connection
 
 const App = () => {
+  //board history and all the other useState I'll need 
   const [history, setHistory] = useState([Array(9).fill(null)]);
+  
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXisNext] = useState(true);
   const winner = calculateWinner(history[stepNumber]);
   const xO = xIsNext ? "X" : "O";
   
-  //User 
+  //User and all the vars I need in the login 
   const [activeUsers, setUsers] = useState([]);
   const [username, setusername] = useState(null);  
   const usernameRef = useRef(null); // This is the reference to the input element  username 
-  //const [xOLogin, setxOLogin] = useState('X'); 
+  
   // hiding the board 
   const [isShown, setShown] = useState(false); 
   // Hiding the leaderboard 
@@ -30,7 +32,11 @@ const App = () => {
   
   // Function onclick for login information 
   function loginClick () {
-     const userText = usernameRef.current.value; 
+     const userText = usernameRef.current.value;
+     if(userText ===""){
+       alert("User Name is required");
+       return;
+     }
      setUsers(prevUsers => {
        const listUserCopy = [...prevUsers]; 
        listUserCopy.push(userText); 
@@ -156,7 +162,7 @@ const App = () => {
       
     }, []);
   
-  
+  //For Winner 
   useEffect(() => {
       var winnerName = "";
       var loserName = "";
@@ -227,10 +233,11 @@ const App = () => {
       <div>
       
       {isShown === false ? (
-        <div>
-      <input ref={usernameRef} type="text" /> 
-        <button onClick={() => loginClick()}> Login </button>
-       
+      <div className="loginD">
+        <label for="uname"><b>Username</b></label>
+        <input ref={usernameRef} type="text" placeholder="Enter Username" required/> 
+        <button className="loginButton" onClick={() => loginClick()}> Login </button>
+        
       </div>
       ):null}
       

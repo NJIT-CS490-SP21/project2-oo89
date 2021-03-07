@@ -8,7 +8,7 @@
 body {
   background: linear-gradient(360deg, #e91e63, #fffde6);
   color: black;
-  font-family: "Brush Script MT";
+  font-family: "Copperplate";
   display: flex;
   /* align-items: center; */
   justify-content: center;
@@ -81,4 +81,29 @@ li {
   color: black;
   border: none;
   outline: none;
+}
+.loginButton {
+  background-color: #4CAF50;
+  color: black;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-family: "Copperplate";
+}
+
+button:hover {
+  opacity: 0.8;
+}
+.loginD{
+  padding: 16px;
+}
+input[type=text]{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }

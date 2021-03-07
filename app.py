@@ -36,7 +36,7 @@ socketio = SocketIO(
 @app.route('/<path:filename>')
 def index(filename):
     return send_from_directory('./build', filename)
-
+    
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
 def on_connect():
@@ -47,8 +47,7 @@ def on_connect():
     scoreList = []
     for person in allUsers:
         users[person.username] = person.score
-        #users.append(person.username)
-        #scoreList.append(person.score)
+
     print("no sorted")
     print(users)
     usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
@@ -70,17 +69,19 @@ def on_disconnect():
 # 'eventData' is a custom event name that we just decided
 @socketio.on('eventData')
 def on_chat(data): # data is whatever arg you pass in your emit call on client
-    print((data['squares']))
-    print((data['i']))
-    print((data['history']))
+   # print((data['squares']))
+    #print((data['i']))
+    #print((data['history']))
     # This emits the 'eventData' event from the server to all clients except for
     # the client that emmitted the event that triggered this function
     socketio.emit('eventData',  data, broadcast=True, include_self=False)
 
+#Jump 
 @socketio.on('jump')
 def on_jump(data): 
     socketio.emit('jump',  data)
-
+    
+#Login information server 
 @socketio.on('login')
 def on_board(data): # data is whatever arg you pass in your emit call on client
     #users.append(data['userText'])
@@ -102,8 +103,7 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         print(allUsers)
         for person in allUsers:
             users[person.username] = person.score
-            #users.append(person.username)
-            #scoreList.append(person.score)
+
         #Then we need to emit what we want and in this case for now emit username and score
         print("no sorted")
         print(users)
@@ -117,7 +117,6 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
         
     else:    
-        print("Aqui--------------------")
         allUsers = models.Person.query.all()
         users= {}
         usersList = []
@@ -149,6 +148,7 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     winnerName = data['winner']
     loserName = data['loser']
     dbWinner = db.session.query(models.Person).get(winnerName)
+    dbLoser = db.session.query(models.Person).get(loserName)
     dbLoser = db.session.query(models.Person).get(loserName)
     #check this problem score not updating on db 
     dbWinner.score= dbWinner.score + 1 
