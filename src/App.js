@@ -179,7 +179,7 @@ const App = () => {
           }
           else
           {
-            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restar\nMake sure you click 'ok' in all of the windows you have open\n");
+            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restart\nMake sure you click 'ok' in all of the windows you have open\n");
           }
           
       }
@@ -194,7 +194,7 @@ const App = () => {
           }
           else
           {
-            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restar\nMake sure you click 'ok' in all of the windows you have open\n");
+            alert("One player doesn’t count to the score\nPlease refresh the game or click on Restart\nMake sure you click 'ok' in all of the windows you have open\n");
           }
           
 
