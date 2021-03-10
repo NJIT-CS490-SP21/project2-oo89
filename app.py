@@ -7,7 +7,6 @@ from dotenv import load_dotenv, find_dotenv
 from collections import OrderedDict
 
 
-
 load_dotenv(find_dotenv()) # This is to load your env variables from .env
 
 app = Flask(__name__, static_folder='./build/static')
@@ -149,7 +148,7 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     loserName = data['loser']
     dbWinner = db.session.query(models.Person).get(winnerName)
     dbLoser = db.session.query(models.Person).get(loserName)
-    dbLoser = db.session.query(models.Person).get(loserName)
+    #dbLoser = db.session.query(models.Person).get(loserName)
     #check this problem score not updating on db 
     dbWinner.score= dbWinner.score + 1 
     dbLoser.score= dbLoser.score - 1 
