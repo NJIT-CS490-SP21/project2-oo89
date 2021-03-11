@@ -1,13 +1,13 @@
 import os
-from flask import Flask, send_from_directory, json, session
+#from collections import OrderedDict
+from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
-from collections import OrderedDict
 
 
-load_dotenv(find_dotenv()) # This is to load your env variables from .env
+load_dotenv(find_dotenv())  # This is to load your env variables from .env
 
 app = Flask(__name__, static_folder='./build/static')
 
@@ -25,17 +25,18 @@ db.create_all()
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-socketio = SocketIO(
-    app,
-    cors_allowed_origins="*",
-    json=json,
-    manage_session=False
-)
+socketio = SocketIO(app,
+                    cors_allowed_origins="*",
+                    json=json,
+                    manage_session=False)
+
+
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 def index(filename):
     return send_from_directory('./build', filename)
-    
+
+
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
 def on_connect():
@@ -49,7 +50,8 @@ def on_connect():
 
     print("no sorted")
     print(users)
-    usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+    usersSorted = dict(
+        sorted(users.items(), key=lambda item: item[1], reverse=True))
     print("sorted")
     print(usersSorted)
     for k, v in usersSorted.items():
@@ -59,44 +61,48 @@ def on_connect():
     print(scoreList)
     socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
 
+
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
 def on_disconnect():
     print('User disconnected!')
 
+
 # When a client emits the event 'eventData' to the server, this function is run
 # 'eventData' is a custom event name that we just decided
 @socketio.on('eventData')
-def on_chat(data): # data is whatever arg you pass in your emit call on client
-   # print((data['squares']))
+def on_chat(data):  # data is whatever arg you pass in your emit call on client
+    # print((data['squares']))
     #print((data['i']))
     #print((data['history']))
     # This emits the 'eventData' event from the server to all clients except for
     # the client that emmitted the event that triggered this function
-    socketio.emit('eventData',  data, broadcast=True, include_self=False)
+    socketio.emit('eventData', data, broadcast=True, include_self=False)
 
-#Jump 
+
+#Jump
 @socketio.on('jump')
-def on_jump(data): 
-    socketio.emit('jump',  data)
-    
-#Login information server 
+def on_jump(data):
+    socketio.emit('jump', data)
+
+
+#Login information server
 @socketio.on('login')
-def on_board(data): # data is whatever arg you pass in your emit call on client
+def on_board(
+        data):  # data is whatever arg you pass in your emit call on client
     #users.append(data['userText'])
-    print("USer Login"+ str(data))
-    
+    print("USer Login" + str(data))
 
     x = models.Person.query.filter_by(username=data['userText']).first()
-    print(x)    
+    print(x)
     if x is None:
-        #Addding the user to the db when login with score=100 
+        #Addding the user to the db when login with score=100
         newUser = models.Person(username=data['userText'], score=100)
         print(data['userText'])
         db.session.add(newUser)
         db.session.commit()
         allUsers = models.Person.query.all()
-        users= {}
+        users = {}
         usersList = []
         scoreList = []
         print(allUsers)
@@ -106,7 +112,8 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
         #Then we need to emit what we want and in this case for now emit username and score
         print("no sorted")
         print(users)
-        usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+        usersSorted = dict(
+            sorted(users.items(), key=lambda item: item[1], reverse=True))
         print("sorted")
         print(usersSorted)
         for k, v in usersSorted.items():
@@ -114,21 +121,22 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
             scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
         socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
-        
-    else:    
+
+    else:
         allUsers = models.Person.query.all()
-        users= {}
+        users = {}
         usersList = []
         scoreList = []
         print(allUsers)
-        
-        for person in allUsers: 
-             users[person.username] = person.score
-             #users.append(person.username)
-             #scoreList.append(person.score)
+
+        for person in allUsers:
+            users[person.username] = person.score
+            #users.append(person.username)
+            #scoreList.append(person.score)
         print("no sorted")
         print(users)
-        usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+        usersSorted = dict(
+            sorted(users.items(), key=lambda item: item[1], reverse=True))
         print("sorted")
         print(usersSorted)
         for k, v in usersSorted.items():
@@ -136,12 +144,12 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
             scoreList.append(v)
         socketio.emit('login', data, broadcast=True, include_self=False)
         socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
-    
 
-    
-#update winner in db and then emit it to all the clients     
+
+#update winner in db and then emit it to all the clients
 @socketio.on('winnerN')
-def on_winner(data): # data is whatever arg you pass in your emit call on client
+def on_winner(
+        data):  # data is whatever arg you pass in your emit call on client
     print(data['winner'])
     print(data['loser'])
     winnerName = data['winner']
@@ -149,22 +157,23 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     dbWinner = db.session.query(models.Person).get(winnerName)
     dbLoser = db.session.query(models.Person).get(loserName)
     #dbLoser = db.session.query(models.Person).get(loserName)
-    #check this problem score not updating on db 
-    dbWinner.score= dbWinner.score + 1 
-    dbLoser.score= dbLoser.score - 1 
+    #check this problem score not updating on db
+    dbWinner.score = dbWinner.score + 1
+    dbLoser.score = dbLoser.score - 1
     db.session.commit()
     #db.session.flush()
-    print("At Winner position" )
+    print("At Winner position")
     print(dbWinner.username, dbWinner.score)
     allUsers = models.Person.query.all()
-    users= {}
+    users = {}
     usersList = []
     scoreList = []
     for person in allUsers:
-            users[person.username] = person.score
+        users[person.username] = person.score
     print("no sorted")
     print(users)
-    usersSorted=dict(sorted(users.items(), key=lambda item: item[1], reverse=True))
+    usersSorted = dict(
+        sorted(users.items(), key=lambda item: item[1], reverse=True))
     print("sorted")
     print(usersSorted)
     for k, v in usersSorted.items():
@@ -173,10 +182,11 @@ def on_winner(data): # data is whatever arg you pass in your emit call on client
     socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
     #socketio.emit('winnerN',  data, broadcast=True, include_self=False)
 
+
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
-    
-# Note that we don't call app.run anymore. We call socketio.run with app arg
+
+    # Note that we don't call app.run anymore. We call socketio.run with app arg
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),

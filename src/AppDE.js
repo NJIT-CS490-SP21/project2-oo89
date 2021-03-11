@@ -1,8 +1,8 @@
-import logo from './logo.svg';
-import './App.css';
-import { ListItem } from './ListItem.js';
-import { useState, useRef, useEffect } from 'react';
-import io from 'socket.io-client';
+import logo from "./logo.svg";
+import "./App.css";
+import { ListItem } from "./ListItem.js";
+import { useState, useRef, useEffect } from "react";
+import io from "socket.io-client";
 
 const socket = io(); // Connects to socket connection
 
@@ -13,10 +13,10 @@ function App() {
   function onClickButton() {
     if (inputRef != null) {
       const message = inputRef.current.value;
-      // If your own client sends a message, we add it to the list of messages to 
+      // If your own client sends a message, we add it to the list of messages to
       // render it on the UI.
-      setMessages(prevMessages => [...prevMessages, message]);
-      socket.emit('eventData', { message: message });
+      setMessages((prevMessages) => [...prevMessages, message]);
+      socket.emit("eventData", { message: message });
     }
   }
 
@@ -26,12 +26,12 @@ function App() {
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
-    socket.on('eventData', (data) => {
-      console.log('Chat event received!');
+    socket.on("eventData", (data) => {
+      console.log("Chat event received!");
       console.log(data);
       // If the server sends a message (on behalf of another client), then we
       // add it to the list of messages to render it on the UI.
-      setMessages(prevMessages => [...prevMessages, data.message]);
+      setMessages((prevMessages) => [...prevMessages, data.message]);
     });
   }, []);
 
@@ -41,7 +41,9 @@ function App() {
       Enter message here: <input ref={inputRef} type="text" />
       <button onClick={onClickButton}>Send</button>
       <ul>
-        {messages.map((item, index) => <ListItem key={index} name={item} />)}
+        {messages.map((item, index) => (
+          <ListItem key={index} name={item} />
+        ))}
       </ul>
     </div>
   );

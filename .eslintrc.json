@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "rules": {
+    "no-console": "off",
+    "no-alert": "off",
+    "import/no-unresolved": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/no-array-index-key": "off",
+    "no-nested-ternary": "off",
+    "react/prop-types": "off"
+    
+    
+  },
+  
+  "parser": "babel-eslint",
+  "parserOptions": {
+  "sourceType": "module",
+  "allowImportExportEverywhere": true
+  }
+
+}

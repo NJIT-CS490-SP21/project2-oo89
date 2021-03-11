@@ -1,8 +1,6 @@
-
 * {
   padding: 0;
   margin: 0;
-  
 }
 
 body {
@@ -30,7 +28,6 @@ h1 {
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
   gap: 0.6rem;
-  
 }
 
 .squares {
@@ -73,9 +70,9 @@ li {
   margin: 0.5rem 1rem;
 }
 .score-board {
-  position:absolute;
+  position: absolute;
   top: 145px;
-  right:340px;
+  right: 340px;
   margin: 0.5rem 1rem;
   display: table;
   color: black;
@@ -83,7 +80,7 @@ li {
   outline: none;
 }
 .loginButton {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: black;
   padding: 14px 20px;
   margin: 8px 0;
@@ -96,10 +93,10 @@ li {
 button:hover {
   opacity: 0.8;
 }
-.loginD{
+.loginD {
   padding: 16px;
 }
-input[type=text]{
+input[type="text"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
