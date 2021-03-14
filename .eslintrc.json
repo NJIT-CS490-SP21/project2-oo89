@@ -5,6 +5,7 @@
     "node": true,
     "browser": true
   },
+  "ignorePatterns": ["App.test.js", "AppDE.js","Board.test.js","index.js","NextWinner.test.js","reportWebVitals.js","setupTests.js","ListItem.js"],
   "rules": {
     "no-console": "off",
     "import/no-unresolved": "off",
