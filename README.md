@@ -22,8 +22,8 @@ Heroku link: https://o2m2tictactoe.herokuapp.com/
 
 1. Run `echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" > .env.development.local` in the project directory
 2. Make sure to clone the milestone_2 branch for project2.
-3. Push milestone2 branch to heroku
-4. Have heroku automatically updated from milestone_2 brach from GitHub
+3. Push milestone2 branch to heroku.
+4. Have heroku automatically updated from milestone_2 brach from GitHub.
 
 5. `git checkout main`
 6. `git merge milestone_1`

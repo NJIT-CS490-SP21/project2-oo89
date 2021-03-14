@@ -20,7 +20,7 @@ const App = () => {
   // const [username, setusername] = useState(null);
   const usernameRef = useRef(null); // This is the reference to the input element  username
 
-  // hiding the board
+  // hiding login
   const [isShown, setShown] = useState(false);
   // Hiding the leaderboard
   const [isShownLB, setShownLB] = useState(false);
@@ -33,7 +33,7 @@ const App = () => {
   function loginClick() {
     const userText = usernameRef.current.value;
     if (userText === '') {
-      alert('User Name is required');
+      // alert('User Name is required');
       return;
     }
     setUsers((prevUsers) => {
@@ -58,7 +58,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // I have to emit all the change o the db to here
+    // I have to emit all the change from the db to here
     socket.on('user_dic', (data) => {
       console.log('User Dic event received!');
       console.log(data);
