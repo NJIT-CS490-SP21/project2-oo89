@@ -6,7 +6,6 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 
-
 load_dotenv(find_dotenv())  # This is to load your env variables from .env
 
 app = Flask(__name__, static_folder='./build/static')
@@ -36,13 +35,15 @@ socketio = SocketIO(app,
 def index(filename):
     return send_from_directory('./build', filename)
 
-#break function in order to test the code without mocking 
+
+#break function in order to test the code without mocking
 def sortDic(usersDic):
     usersSorted = dict(
         sorted(usersDic.items(), key=lambda item: item[1], reverse=True))
-    print(usersSorted)    
+    print(usersSorted)
     return usersSorted
-    
+
+
 #adding to the two lists from sorted dic
 def addUsersScoresToLists(usersSortDic):
     usersList = []
@@ -51,17 +52,18 @@ def addUsersScoresToLists(usersSortDic):
         usersList.append(k)
         scoreList.append(v)
     return usersList, scoreList
-    
-#Count profit is a funtion to know how many dolars a user have won or lost in the game. 1 game = $1   
+
+
+#Count profit is a funtion to know how many dolars a user have won or lost in the game. 1 game = $1
 def calculateProfit(usersList, scoreList):
     profit = {}
-    for x in range(len(usersList)):
+    for x, m in enumerate(usersList):
         wonGames = scoreList[x] - 100
-        profit[usersList[x]] = wonGames
+        profit[m] = wonGames
     return profit
-    
-    
-# This funtion is to get users from the DB. 
+
+
+# This funtion is to get users from the DB.
 def getUserDB():
     allUsers = models.Person.query.all()
     users = {}
@@ -73,8 +75,9 @@ def getUserDB():
     print("sorted")
     print(usersSorted)
     return addUsersScoresToLists(usersSorted)
-    
-# Add user to DB 
+
+
+# Add user to DB
 def addNewUserDB(userText):
     #Addding the user to the db when login with score=100
     newUser = models.Person(username=userText, score=100)
@@ -87,14 +90,15 @@ def addNewUserDB(userText):
 
     usersSorted = sortDic(users)
     return addUsersScoresToLists(usersSorted)
-    
+
+
 # Update the the winner score and also the loser
 def updateWinnerLoser(winnerName, loserName):
     dbWinner = db.session.query(models.Person).get(winnerName)
     dbLoser = db.session.query(models.Person).get(loserName)
     dbWinner.score = dbWinner.score + 1
     dbLoser.score = dbLoser.score - 1
-    
+
     db.session.commit()
     allUsers = models.Person.query.all()
     users = {}
@@ -103,18 +107,21 @@ def updateWinnerLoser(winnerName, loserName):
 
     usersSorted = sortDic(users)
     return addUsersScoresToLists(usersSorted)
-    
+
+
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
     usersList, scoreList = getUserDB()
     socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
-    
+
+
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
 def on_disconnect():
     print('User disconnected!')
+
 
 # When a client emits the event 'eventData' to the server, this function is run
 # 'eventData' is a custom event name that we just decided
@@ -122,10 +129,12 @@ def on_disconnect():
 def on_chat(data):  # data is whatever arg you pass in your emit call on client
     socketio.emit('eventData', data, broadcast=True, include_self=False)
 
+
 #Jump
 @socketio.on('jump')
 def on_jump(data):
     socketio.emit('jump', data)
+
 
 #Login information server
 @socketio.on('login')
@@ -145,6 +154,7 @@ def on_board(
         socketio.emit('login', data, broadcast=True, include_self=False)
         socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
 
+
 #update winner in db and then emit it to all the clients
 @socketio.on('winnerN')
 def on_winner(
@@ -154,10 +164,11 @@ def on_winner(
     winnerName = data['winner']
     loserName = data['loser']
     usersList, scoreList = updateWinnerLoser(winnerName, loserName)
-    print(calculateProfit(usersList,scoreList))
+    print(calculateProfit(usersList, scoreList))
     socketio.emit('user_dic', {'users': usersList, 'scores': scoreList})
     #socketio.emit('winnerN',  data, broadcast=True, include_self=False)
-    
+
+
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
 

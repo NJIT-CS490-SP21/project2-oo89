@@ -32,10 +32,10 @@ const App = () => {
   // Function onclick for login information
   function loginClick() {
     const userText = usernameRef.current.value;
-    if (userText === '') {
-      // alert('User Name is required');
-      return;
-    }
+    // if (userText === '') {
+    // alert('User Name is required');
+    //  return;
+    // }
     setUsers((prevUsers) => {
       const listUserCopy = [...prevUsers];
       listUserCopy.push(userText);
@@ -164,19 +164,11 @@ const App = () => {
         console.log(`The Winner I want ${winnerName}`);
         console.log(`The loser I want ${loserName}`);
         socket.emit('winnerN', { winner: winnerName, loser: loserName });
-      } else {
-        alert(
-          "One player doesn’t count to the score\nPlease refresh the game or click on Restart\nMake sure you click 'ok' in all of the windows you have open\n",
-        );
       }
     } else if (winner === 'O') {
       if (activeUsers.length > 1) {
         const [loserName, winnerName] = activeUsers;
         socket.emit('winnerN', { winner: winnerName, loser: loserName });
-      } else {
-        alert(
-          "One player doesn’t count to the score\nPlease refresh the game or click on Restart\nMake sure you click 'ok' in all of the windows you have open\n",
-        );
       }
     }
   }, [winner]);
@@ -186,7 +178,7 @@ const App = () => {
     const destination = move ? `Go to move #${move}` : 'Restart';
     return (
       <li key={move}>
-        <button type="button" onClick={() => jumpTo(move)}>{destination}</button>
+        <button aria-label="RestartE" type="button" onClick={() => jumpTo(move)}>{destination}</button>
       </li>
     );
   });
@@ -240,14 +232,14 @@ const App = () => {
           <div>
             <Board squares={history[stepNumber]} onClick={sqClick} />
 
-            <div className="info-wrapper">
+            <div aria-label="infoWrapper" className="info-wrapper">
               <div>
                 <button type="button" onClick={() => leaderboardSHClick()}>
                   {' '}
                   show/Hide Leaderboard
                 </button>
-                <button type="button">Enjoy the Game</button>
-                <button type="button">
+                <button aria-label="Enjoy" type="button">Enjoy the Game</button>
+                <button aria-label="Next/Winner" type="button">
                   {winner ? `Winner: ${winner}` : `Next Player: ${xO}`}
                 </button>
                 <h3>Steps in history</h3>

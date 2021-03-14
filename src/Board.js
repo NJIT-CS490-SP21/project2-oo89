@@ -8,7 +8,7 @@ const Board = ({ squares, onClick }) => {
   }, []);
 
   return (
-    <div className="board">
+    <div aria-label="board" className="board">
       {squares.map((square, i) => (
         <Square key={i} value={square} onClick={() => onClick(i)} />
       ))}
