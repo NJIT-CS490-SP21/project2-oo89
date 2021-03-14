@@ -6,7 +6,7 @@ CS490
 
 O2TicTacToe
 
-Heroku link: https://o2m2tictactoe.herokuapp.com/
+Heroku link: https://o2ttt.herokuapp.com/
 
 ## Requirements
 
