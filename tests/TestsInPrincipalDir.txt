@@ -1,0 +1,2 @@
+The tests cases are inside the base dir of the project. I did that because I couldn’t find the way to import my app.py inside those. 
+I was doing everything and I could't. They are working and passing. 

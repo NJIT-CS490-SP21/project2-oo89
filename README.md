@@ -2,6 +2,8 @@
 
 CS490
 
+# Important python tests are in the same leval as app.py
+
 O2TicTacToe
 
 Heroku link: https://o2m2tictactoe.herokuapp.com/
